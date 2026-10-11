@@ -32,3 +32,25 @@ jobs:
 
       - name: Run UI tests
         run: npm run test
+
+  deploy_backend_to_render:
+    needs: build_test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to Render
+        uses: JorgeLNJunior/render-deploy@v1.5.0
+        with:
+          service_id: ${{ secrets.SERVICE_BE_ID }}
+          api_key: ${{ secrets.RENDER_API_KEY }}
+          wait_deploy: true
+
+  deploy_frontend_to_render:
+    needs: deploy_backend_to_render
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to Render
+        uses: JorgeLNJunior/render-deploy@v1.5.0
+        with:
+          service_id: ${{ secrets.SERVICE_FE_ID }}
+          api_key: ${{ secrets.RENDER_API_KEY }}
+          wait_deploy: true
